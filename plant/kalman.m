@@ -5,8 +5,8 @@ r = 10;
 model = discreteCVmodel (q , r) ;
 ekf = EKF ( model );
 % initialize
-xbar (: , 1) = [0 , 0 , 1, 1 ] ';
-Pbar (: , : , 1) = diag ([50 , 50 , 10 , 10].^2) ;
+xbar(:, 1) = [0 , 0 , 1, 1 ]';
+Pbar(:, :, 1) = diag([50 , 50 , 10 , 10].^2) ;
 % estimate
 for k = 1: K
     [xhat(:, k), Phat(:, :,k) ] = ekf.update(Z(:, k), xbar(:, k), Pbar(:, :, k));
