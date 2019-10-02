@@ -98,15 +98,20 @@ G =  [
     [0 0.2]
     ];
 
-D = zeros(2,2);
-H = zeros(2,2);
-
+% Measurement matrix
 C = zeros(2,10);
 C(1,1) = 1; % theta_L1
 C(2,4) = 1; % theta_L2
 
-w = [0;0];
-
+% Create matrices for discretized system, ref Fossen 2011 eq. 11.38 - 11.41
 [PHI, DELTA] = c2d(A,B,Ts);
-[PHI_2, GAMMA] = c2d(A,G,Ts);
+[~, GAMMA] = c2d(A,G,Ts);
+
+% Initial states
+initial_state = [0,0,0,0,0,0,0,0,0,0]';
+initial_P = initial_state * initial_state';
+
+% Symmetrical weight matrices
+Q = eye(2).*10; %
+R = eye(2).*10;
 
