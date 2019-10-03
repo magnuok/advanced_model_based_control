@@ -1,3 +1,4 @@
+close all
 % Plots real shart angles vs the kalman estimates ones
 
 % Plots references agains actual values in north, east and yaw
@@ -22,15 +23,17 @@ t0 = z_kalman.Time; t1 = z_real.Time;
 as = [0 t1(end)     (mn(1)-1)*1.1            (mx(1)+1e-1)*1.1;
       0 t1(end)     (mn(2)-1)*1.1            (mx(2)+1e-1)*1.1];
 
-figure;
+figure(1);
 
 subplot(2,2,1);
-p(1) = plot(t1',z_real.Data(:,1),'-r','LineWidth',1.2);
+p(1) = plot(t0, y_real.Data(:,1), '-g', 'LineWidth',1.5);
 axis(as(1,:))
 hold on
-p(2) = plot(t0,z_kalman.Data(:,1),'-','Color',clr,'LineWidth',1.5);
+p(2) = plot(t1',z_real.Data(:,1),'-r','LineWidth',1.2);
+hold on
+p(3) = plot(t0,z_kalman.Data(:,1),'-','Color',clr,'LineWidth',1.5);
 title('z1')
-legend(p,'Real shaft angle','KF estimated angle');
+legend(p,'Real shaft angle with noise', 'Real shaft angle','KF estimated angle');
 ylabel('Shaft angle [deg]')
 xlabel('Time [s]')
 grid on
@@ -45,11 +48,13 @@ grid on
 hold off
 
 subplot(2,2,3);
-p(1) = plot(t1,z_real.Data(:,2),'-r','LineWidth',1.2);
+p(1) = plot(t0, y_real.Data(:,2), '-g', 'LineWidth',1.5);
 axis(as(2,:))
 hold on
-p(2) = plot(t0,z_kalman.Data(:,2),'-','Color',clr,'LineWidth',1.5);
-legend(p,'Real shaft angle','KF estimated angle');
+p(2) = plot(t1,z_real.Data(:,2),'-r','LineWidth',1.2);
+hold on
+p(3) = plot(t0,z_kalman.Data(:,2),'-','Color',clr,'LineWidth',1.5);
+legend(p,'Real shaft angle with noise', 'Real shaft angle','KF estimated angle');
 title('z2')
 ylabel('Shaft angle [deg]')
 xlabel('Time [s]')

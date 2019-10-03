@@ -112,6 +112,7 @@ initial_state = [0,0,0,0,0,0,0,0,0,0]';
 initial_P = initial_state * initial_state';
 
 % Symmetrical weight matrices
-Q = eye(2).*10; %
-R = eye(2).*10;
+Q = diag([1,11],0).*10^0; %
+
+R = eye(2).*10^-3;
 
