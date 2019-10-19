@@ -4,8 +4,8 @@ close all
 % Plots references agains actual values in north, east and yaw
 % Simen Sem Oevereng
 
-% Choose degrees or radians for the yaw angle
-if false, radconv = 180/pi; else radconv = 1; end
+% Choose degrees or radians for the angle
+if true, radconv = 180/pi; else radconv = 1; end
 
 % Choose RGB plotcolor of actual position
 clr = [0 0.5 0.9];
