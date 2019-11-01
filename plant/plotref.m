@@ -25,46 +25,51 @@ as = [0 t1(end)     (mn(1)-1)*1.1            (mx(1)+1e-1)*1.1;
 
 figure(1);
 
-subplot(2,2,1);
-p(1) = plot(t0, y_real.Data(:,1), '-g', 'LineWidth',1.5);
+subplot(2,1,1);
+p(1) = plot(t0, y_real.Data(:,1), '-g', 'LineWidth',1);
 axis(as(1,:))
+ax = gca;
+ax.FontWeight = 'bold'; 
 hold on
 p(2) = plot(t1',z_real.Data(:,1),'-r','LineWidth',1.2);
 hold on
 p(3) = plot(t0,z_kalman.Data(:,1),'-','Color',clr,'LineWidth',1.5);
-title('z1')
-legend(p,'Real shaft angle with noise', 'Real shaft angle','KF estimated angle');
-ylabel('Shaft angle [deg]')
-xlabel('Time [s]')
+title('\textbf{Shaft angle} $\theta_1$', 'Interpreter', 'latex', 'FontSize', 13)
+legend(p, '\textbf{Real shaft} $\theta_1$ \textbf{angle with noise}', '\textbf{Real shaft angle} $\theta_1$','\textbf{KF estimated shaft angle} $\hat{\theta}_1$', 'Interpreter', 'latex', 'FontSize', 13);
+ylabel('\textbf{Shaft angle} $\theta_1$ [deg]', 'Interpreter', 'latex', 'FontSize', 13)
+xlabel('\textbf{Time} $[s]$', 'Interpreter', 'latex', 'FontSize', 13)
 grid on
 hold off
 
-subplot(2,2,2);
+subplot(2,1,2);
 p = plot(t0,-z_real.Data(:,1) + z_kalman.Data(:,1),'-','Color',clr,'LineWidth',1.5);
-title('z1 error, kalman - real')
-ylabel('Shaft angle error [deg]')
-xlabel('Time [s]')
+title('\textbf{Shaft angle error} $\tilde{\theta}_1 = \theta_1 - \hat{\theta}_1$', 'Interpreter', 'latex' , 'FontSize', 13)
+ylabel('\textbf{Shaft angle error} $\tilde{\theta}_1$ [deg]', 'Interpreter', 'latex', 'FontSize', 13)
+xlabel('\textbf{Time} $[s]$', 'Interpreter', 'latex', 'FontSize', 13)
+ax = gca;
+ax.FontWeight = 'bold'; 
 grid on
 hold off
 
-subplot(2,2,3);
-p(1) = plot(t0, y_real.Data(:,2), '-g', 'LineWidth',1.5);
+figure(2)
+subplot(2,1,1);
+p(1) = plot(t0, y_real.Data(:,2), '-g', 'LineWidth',1);
 axis(as(2,:))
 hold on
 p(2) = plot(t1,z_real.Data(:,2),'-r','LineWidth',1.2);
 hold on
 p(3) = plot(t0,z_kalman.Data(:,2),'-','Color',clr,'LineWidth',1.5);
-legend(p,'Real shaft angle with noise', 'Real shaft angle','KF estimated angle');
-title('z2')
-ylabel('Shaft angle [deg]')
-xlabel('Time [s]')
+title('\textbf{Shaft angle} $\theta_2$', 'Interpreter', 'latex', 'FontSize', 13)
+legend(p, '\textbf{Real shaft} $\theta_2$ \textbf{angle with noise}', '\textbf{Real shaft angle} $\theta_2$','\textbf{KF estimated shaft angle} $\hat{\theta}_2$', 'Interpreter', 'latex', 'FontSize', 13);
+ylabel('\textbf{Shaft angle} $\theta_2$ [deg]', 'Interpreter', 'latex', 'FontSize', 13)
+xlabel('\textbf{Time} $[s]$', 'Interpreter', 'latex', 'FontSize', 13)
 grid on
 hold off
 
-subplot(2,2,4);
+subplot(2,1,2);
 p = plot(t0,-z_real.Data(:,2) + z_kalman.Data(:,2),'-','Color',clr,'LineWidth',1.5);
-title('z2 error, kalman - real')
-ylabel('Shaft angle error [deg]')
-xlabel('Time [s]')
+title('\textbf{Shaft angle error} $\tilde{\theta}_2 = \theta_2 - \hat{\theta}_2$', 'Interpreter', 'latex' , 'FontSize', 13)
+ylabel('\textbf{Shaft angle error} $\tilde{\theta}_2$ [deg]', 'Interpreter', 'latex', 'FontSize', 13)
+xlabel('\textbf{Time} $[s]$', 'Interpreter', 'latex', 'FontSize', 13)
 grid on
 hold off
