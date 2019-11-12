@@ -11,6 +11,9 @@ DELTAS = [];  % Discretization with different stiffness parameters used
 GAMMAS = [];  % Discretization with different stiffness parameters used
 As = [];      % Store entire state space models
 Ps = [];
+G_cont = [[0 0];[0 0];[0 0];[0 0];[0 0];[0 0];[0 0];[0 0];[0.2 0];[0 0.2]];
+B_cont = [[0 0];[0 0];[0 0];[0 0];[0 0];[1/JM1 0];[0 1/JM1];[0 0];[0 0];[0 0]];
+C_const = zeros(2,10); C_const(1,1) = 1; C_const(2,4) = 1; % theta_L1 and theta_L2
 
 for i = 1:N
     % Store hypothesis values and discretizations into the different objects 
@@ -36,14 +39,16 @@ for i = 1:N
 
     a = [A1;A2;A3;A4;A5;A6;A7;A8;A9;A10];
     
-    sys = ss(a,[B G], C, [zeros(2) zeros(2)]);
-    [KESTi,Li,Pi,M,Z] = kalmd(sys,Q,R,Ts);
-    PHIS = cat(3,PHIS,KESTi.A);
-    DELTAS = cat(3,DELTAS,KESTi.B(:,1:2));
-    Ks = [Ks Li];
-    Shtemp  = C * Pi * C'+ R;
-    Sh_dets = [Sh_dets det(Shtemp)];
-    Sh_invs = [Sh_invs inv(Shtemp)];
+    sys = ss(a,[B_cont G_cont], C_const, [zeros(2) zeros(2)]);
+    [KESTi,Li,Pi,M,Zi] = kalmd(sys,Q,R,Ts);
+    
+    [phi_c2d,delta_c2d] = c2d(a,B_cont,Ts);
+    PHIS = cat(3,PHIS,phi_c2d); % Does not work with KESTi.A
+    DELTAS = cat(3,DELTAS,delta_c2d); % Alternatively KESTi.B(:,1:2)
+    Ks = cat(3,Ks,Li);
+    Shtemp  = C_const * Pi * C_const'+ R./Ts; % Using discretized measurement noise
+    Sh_dets = cat(3, Sh_dets, det(Shtemp));
+    Sh_invs = cat(3,Sh_invs, inv(Shtemp));
     
     %KEST.C
     
@@ -56,4 +61,4 @@ for i = 1:N
 end
 
 % Avoid overpopulating workspace
-clear A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 a p d g inmat Pss Kss
+clear A1 A2 A3 A4 A5 A6 A7 A8 A9 A10  p d g inmat Pss Kss

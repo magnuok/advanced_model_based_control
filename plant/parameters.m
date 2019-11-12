@@ -45,13 +45,13 @@ C = zeros(2,10); C(1,1) = 1; C(2,4) = 1; % theta_L1 and theta_L2
 
 % Continous state-space matrices
 ks = [[2.0 2.0]; [1.0 1.75]; [2.0 1.25]]; % Stiffnesses for the different hypotheses
-N = length(ks);
+Nhypo = length(ks);
 
-R = diag([TH1,TH2]) ./ Ts; % Discretized
-Q = diag([XI1,XI2],0);  % Symmetrical noise weight matrices
+R = diag([TH1,TH2]);    % Continous
+Q = diag([XI1,XI2],0);  % Continous. Symmetrical noise weight matrices
 GAMMA = eye(10);
 
-initial_probs = [1.0/N 1.0/N 1.0/N];
+initial_probs = [1.0/Nhypo 1.0/Nhypo 1.0/Nhypo];
 Sh_dets = []; % Determinants of covariance of output estimation vector
 Sh_invs = []; % Inverses of covariance of output estimation vector
 Ks = [];      % Steady state kalman filter gains for the three hypothesis
@@ -61,7 +61,7 @@ Qs = [];  % Discretization with different stiffness parameters used
 As = [];      % Store entire state space models
 Ps = [];
 
-for i = 1:N
+for i = 1:Nhypo
     k2i = ks(i,1);
     k5i = ks(i,2);
     
@@ -78,6 +78,18 @@ for i = 1:N
 
     A = [A1;A2;A3;A4;A5;A6;A7;A8;A9;A10];
     
+%     sys = ss(A,[B G], C, [zeros(2) zeros(2)]);
+%     
+%     [KESTi,Li,Pi,M,Z] = kalmd(sys,Q,R,Ts); % Convert from continous to discrete
+%     
+%     PHIS = cat(3,PHIS,KESTi.A);
+%     DELTAS = cat(3,DELTAS,KESTi.B(:,1:2));
+%     
+%     Ks = [Ks Li];
+%     Shtemp  = C * Pi * C'+ R;
+%     Sh_dets = [Sh_dets det(Shtemp)];
+%     Sh_invs = [Sh_invs inv(Shtemp)];
+    
     [PHI, DELTA] = c2d(A,B,Ts);
     % van Loans:
     M = [-A, G*Q*transpose(G);
@@ -90,11 +102,14 @@ for i = 1:N
     PHIs = cat(3,PHIs,PHI);
     DELTAs = cat(3,DELTAs,DELTA);
     Qs = cat(3,Qs,Q_d);
+    
+   
+
 
 end
 
 % Avoid overpopulating workspace
-clear A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 a p d g inmat Pss Kss M N A_d Q_d k2i k5i
+clear A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 a p d g inmat Pss Kss M A_d Q_d k2i k5i
 
 % Initial states
 initial_state = [0,0,0,0,0,0,0,0,0,0]';
