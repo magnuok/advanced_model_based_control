@@ -1,27 +1,23 @@
+% Loads all parameters used for the Dynamic Hypothesis testing
+
 ks = [[2.0 2.0]; [1.0 1.75]; [2.0 1.25]]; % Stiffnesses for the different hypotheses
 
-N = length(ks);
-initial_probs = [1.0/N 1.0/N 1.0/N];
+N_hypos = length(ks); % Number of hypytheses
+initial_probs = [1.0/N_hypos 1.0/N_hypos 1.0/N_hypos]; % Initialize all probs to uniform
 
 Sh_dets = []; % Determinants of covariance of output estimation vector
 Sh_invs = []; % Inverses of covariance of output estimation vector
 Ks = [];      % Steady state kalman filter gains for the three hypothesis
 PHIS = [];    % Discretization with different stiffness parameters used
 DELTAS = [];  % Discretization with different stiffness parameters used
-GAMMAS = [];  % Discretization with different stiffness parameters used
-As = [];      % Store entire state space models
-Ps = [];
+
+% Continous time matrices from the project description
 G_cont = [[0 0];[0 0];[0 0];[0 0];[0 0];[0 0];[0 0];[0 0];[0.2 0];[0 0.2]];
 B_cont = [[0 0];[0 0];[0 0];[0 0];[0 0];[1/JM1 0];[0 1/JM1];[0 0];[0 0];[0 0]];
-C_const = zeros(2,10); C_const(1,1) = 1; C_const(2,4) = 1; % theta_L1 and theta_L2
+C_const = zeros(2,10); C_const(1,1) = 1; C_const(2,4) = 1; % theta_L1 and _L2
 
-for i = 1:N
+for i = 1:N_hypos
     % Store hypothesis values and discretizations into the different objects 
-%     inmat   = load('ss' + string(i));
-%     Ks      = [Ks inmat.K_ss];
-%     Shtemp  = C * inmat.P_ss * C'+ R;
-%     Sh_dets = [Sh_dets det(Shtemp)];
-%     Sh_invs = [Sh_invs inv(Shtemp)];
     
     k2i = ks(i,1);
     k5i = ks(i,2);
@@ -39,26 +35,26 @@ for i = 1:N
 
     a = [A1;A2;A3;A4;A5;A6;A7;A8;A9;A10];
     
+    % Create state space of the continous time matrices
     sys = ss(a,[B_cont G_cont], C_const, [zeros(2) zeros(2)]);
+    
+    % Discretize in order to get the steady-state gain and covariance
     [KESTi,Li,Pi,M,Zi] = kalmd(sys,Q,R,Ts);
     
+    % Get the discrete time A and B matrix, and add to larger tensor
     [phi_c2d,delta_c2d] = c2d(a,B_cont,Ts);
     PHIS = cat(3,PHIS,phi_c2d); % Does not work with KESTi.A
     DELTAS = cat(3,DELTAS,delta_c2d); % Alternatively KESTi.B(:,1:2)
+    
+    % Store all kalman gains for the steady-state filters
     Ks = cat(3,Ks,Li);
-    Shtemp  = C_const * Pi * C_const'+ R./Ts; % Using discretized measurement noise
-    Sh_dets = cat(3, Sh_dets, det(Shtemp));
-    Sh_invs = cat(3,Sh_invs, inv(Shtemp));
     
-    %KEST.C
+    % Store the measurement covariance determinants and inverses for DHT code
+    Shtemp  = C_const*Pi*C_const'+ R./Ts; % Use discretized measurement noise
+    Sh_dets = cat(3,Sh_dets,det(Shtemp));
+    Sh_invs = cat(3,Sh_invs,inv(Shtemp));
     
-    
-    % Append
-    % [p, d] = c2d(a,B,Ts);
-%     PHIS = cat(3,PHIS,p);
-%     DELTAS = cat(3,DELTAS,d);   
-%     As = [As a];
 end
 
 % Avoid overpopulating workspace
-clear A1 A2 A3 A4 A5 A6 A7 A8 A9 A10  p d g inmat Pss Kss
+clear A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 p d g
