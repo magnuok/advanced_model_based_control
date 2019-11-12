@@ -45,7 +45,7 @@ for i = 1:N
     Sh_dets = [Sh_dets det(Shtemp)];
     Sh_invs = [Sh_invs inv(Shtemp)];
     
-    KEST.C
+    %KEST.C
     
     
     % Append
