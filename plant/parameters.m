@@ -67,14 +67,10 @@ Q = diag([XI1,XI2],0);  % Continous time. Symmetrical noise weight matrices
 
 % van Loans method for discretizing Q: https://wolfweb.unr.edu/~fadali/EE782/NumEvalQphi.pdf
 GAMMA = eye(10);
-
 M = [-A, G*Q*transpose(G);
      zeros(size(A)), transpose(A)]*Ts;
- 
 N = expm(M);
-
 A_d = N(11:20, 11:20)'; % Same as PHI
-
 % Note that Q_d is now a 10x10 matrix. => G is 10x1 identity instead.
 Qd = A_d*N(1:10, 11:20); % Discrete time system noise matrix
 
@@ -96,7 +92,8 @@ clear inmat
 dht;
 
 % Simulation parameters
-simNo = 10; % Number between 1 and 10. simNo == 9 means to have constant k2,k5-values, 10 means step changes in spring stiffnesses
+% Number between 1 and 10. simNo == 9 means to have constant k2,k5-values, 10 means step changes in spring stiffnesses
+simNo = 5; 
 simTime = 300;
 
 % For a quick simulation from the command window, qsim can be used. For

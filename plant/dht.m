@@ -50,7 +50,7 @@ for i = 1:N_hypos
     Ks = cat(3,Ks,Li);
     
     % Store the measurement covariance determinants and inverses for DHT code
-    Shtemp  = C_const*Pi*C_const'+ R./Ts; % Use discretized measurement noise
+    Shtemp  = C_const*Pi*C_const'+ Rd; % Use discretized measurement noise
     Sh_dets = cat(3,Sh_dets,det(Shtemp));
     Sh_invs = cat(3,Sh_invs,inv(Shtemp));
     
