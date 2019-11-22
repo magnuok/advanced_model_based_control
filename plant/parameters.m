@@ -92,9 +92,20 @@ clear inmat
 dht;
 
 % Simulation parameters
-% Number between 1 and 10. simNo == 9 means to have constant k2,k5-values, 10 means step changes in spring stiffnesses
-simNo = 5; 
-simTime = 300;
+% Number between 1 and 10. 
+% simNo == 9 means to have constant k2,k5-values (used for the time-varying kalman filter)
+% 10 means step changes in spring stiffnesses (used for testing different
+% hypotheses). 1-8 means the sine curves given by Prof. Hassani. Simulation 5 has been changed to fit
+% better with the specific k-values of the hypotheses.
+simNo = 9; 
+simTime = 60;
+
+% Decide which states are used as feedback to the controller:
+% 1: Uses the unfiltered measurements
+% 2: Uses the real states
+% 3: Uses the time varying kalman estimation as state feedback to the controller. 
+stateFeedback = 3; 
+
 
 % For a quick simulation from the command window, qsim can be used. For
 % immediately plotting, run: qsim; plotref; plotprobs;

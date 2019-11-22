@@ -1,4 +1,4 @@
-close all
+% close all
 % Plots real shart angles vs the kalman estimates ones
 
 % Plots references agains actual values in north, east and yaw
@@ -23,7 +23,7 @@ t0 = z_kalman.Time; t1 = z_real.Time;
 as = [0 t1(end)     (mn(1)-1)*1.1            (mx(1)+1e-1)*1.1;
       0 t1(end)     (mn(2)-1)*1.1            (mx(2)+1e-1)*1.1];
 
-figure(1);
+figure;
 
 subplot(2,1,1);
 p(1) = plot(t0, y_real.Data(:,1), '-g', 'LineWidth',1);
@@ -51,7 +51,7 @@ ax.FontWeight = 'bold';
 grid on
 hold off
 
-figure(2)
+figure;
 subplot(2,1,1);
 p(1) = plot(t0, y_real.Data(:,2), '-g', 'LineWidth',1);
 axis(as(2,:))
